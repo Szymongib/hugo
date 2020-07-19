@@ -28,6 +28,8 @@ var (
 	emojiDelim     = []byte(":")
 	emojiWordDelim = []byte(" ")
 	emojiMaxSize   int
+
+	codeBlockDelim = []byte("\n```")
 )
 
 // Emoji returns the emojy given a key, e.g. ":smile:", nil if not found.
@@ -53,6 +55,14 @@ func Emojify(source []byte) []byte {
 
 		if upper > len(source) {
 			upper = len(source)
+		}
+
+		// If emoji is inside code block ``` - skip replacing
+		codeBlocks := bytes.Count(source[0:j+1], codeBlockDelim)
+		if codeBlocks %2 != 0 {
+			start += k+1
+			k = bytes.Index(source[start:], emojiDelim)
+			continue
 		}
 
 		endEmoji := bytes.Index(source[j+1:upper], emojiDelim)
