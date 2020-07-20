@@ -59,12 +59,12 @@ func TestEmojiCustom(t *testing.T) {
 			[]byte(`[a](http://gohugo.io) 😄 [r](http://gohugo.io/introduction/overview/) 🍺`),
 		},
 		{
-			"such code :smile: \n```go\nmuch code :smile:\n``` much wow :smile: \n```\nmuch more code :beer:\n``` much more wow :beer:!",
-			[]byte("such code 😄 \n```go\nmuch code :smile:\n``` much wow 😄 \n```\nmuch more code :beer:\n``` much more wow 🍺!"),
+			"such code :smile: \n```go\nmuch code :smile:\n```\n much wow :smile: \n```\nmuch more code :beer:\n```\n much more wow :beer:!",
+			[]byte("such code 😄 \n```go\nmuch code :smile:\n```\n much wow 😄 \n```\nmuch more code :beer:\n```\n much more wow 🍺!"),
 		},
 		{
-			"such code :smile: \n```go\nmuch code :sm:smile::beer:ile:\n``` much wow :smile: \n```\nmuch more code :beer:\n``` much more wow :beer:!",
-			[]byte("such code 😄 \n```go\nmuch code :sm:smile::beer:ile:\n``` much wow 😄 \n```\nmuch more code :beer:\n``` much more wow 🍺!"),
+			"such code :smile: \n```go\nmuch code :sm:smile::beer:ile:\n```\n much wow :smile: \n```\nmuch more code :beer:\n```\n much more wow :beer:!",
+			[]byte("such code 😄 \n```go\nmuch code :sm:smile::beer:ile:\n```\n much wow 😄 \n```\nmuch more code :beer:\n```\n much more wow 🍺!"),
 		},
 	} {
 

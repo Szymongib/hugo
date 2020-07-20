@@ -44,6 +44,8 @@ func Emoji(key string) []byte {
 func Emojify(source []byte) []byte {
 	emojiInit.Do(initEmoji)
 
+	codeBlocks := 0
+
 	start := 0
 	k := bytes.Index(source[start:], emojiDelim)
 
@@ -51,36 +53,34 @@ func Emojify(source []byte) []byte {
 
 		j := start + k
 
-		upper := j + emojiMaxSize
-
-		if upper > len(source) {
-			upper = len(source)
-		}
-
-		// If emoji is inside code block ``` - skip replacing
-		codeBlocks := bytes.Count(source[0:j+1], codeBlockDelim)
+		// If emojiDelim is inside code block ``` ignore it and continue
+		codeBlocks += bytes.Count(source[start:j+1], codeBlockDelim)
 		if codeBlocks %2 != 0 {
-			start += k+1
-			k = bytes.Index(source[start:], emojiDelim)
-			continue
-		}
-
-		endEmoji := bytes.Index(source[j+1:upper], emojiDelim)
-		nextWordDelim := bytes.Index(source[j:upper], emojiWordDelim)
-
-		if endEmoji < 0 {
-			start++
-		} else if endEmoji == 0 || (nextWordDelim != -1 && nextWordDelim < endEmoji) {
-			start += endEmoji + 1
+			start = j+1
 		} else {
-			endKey := endEmoji + j + 2
-			emojiKey := source[j:endKey]
+			upper := j + emojiMaxSize
 
-			if emoji, ok := emojis[string(emojiKey)]; ok {
-				source = append(source[:j], append(emoji, source[endKey:]...)...)
+			if upper > len(source) {
+				upper = len(source)
 			}
 
-			start += endEmoji
+			endEmoji := bytes.Index(source[j+1:upper], emojiDelim)
+			nextWordDelim := bytes.Index(source[j:upper], emojiWordDelim)
+
+			if endEmoji < 0 {
+				start++
+			} else if endEmoji == 0 || (nextWordDelim != -1 && nextWordDelim < endEmoji) {
+				start += endEmoji + 1
+			} else {
+				endKey := endEmoji + j + 2
+				emojiKey := source[j:endKey]
+
+				if emoji, ok := emojis[string(emojiKey)]; ok {
+					source = append(source[:j], append(emoji, source[endKey:]...)...)
+				}
+
+				start += endEmoji
+			}
 		}
 
 		if start >= len(source) {
