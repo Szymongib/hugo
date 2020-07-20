@@ -55,8 +55,8 @@ func Emojify(source []byte) []byte {
 
 		// If emojiDelim is inside code block ``` ignore it and continue
 		codeBlocks += bytes.Count(source[start:j+1], codeBlockDelim)
-		if codeBlocks %2 != 0 {
-			start = j+1
+		if codeBlocks%2 != 0 {
+			start = j + 1
 		} else {
 			upper := j + emojiMaxSize
 
